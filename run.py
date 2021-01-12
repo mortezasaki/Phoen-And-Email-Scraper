@@ -7,9 +7,6 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 import re
-import requests
-import json
-from time import sleep
 
 
 browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
@@ -27,26 +24,23 @@ for cookie in cookies_list:
     cookies_dict[cookie['name']] = cookie['value']
 
 token = {'token':cookies_dict['token']}
-print(token)
+f = open('token.txt','w')
+f.write(cookies_dict['token'])
+f.close()
 
-input("For Get All number from this page press enter")
-html_page = browser.page_source
-soup = BeautifulSoup(html_page,'html.parser')
+input("For Get links from this page press enter")
 
 links = []
 
-for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
-    links.append(link.get('href'))
-with open('phones.txt','a') as f:
-    for link in links:
-        url = 'https://api.divar.ir/v5/posts/{0}/contact'.format(link.split('/')[-1])
-        req = requests.get(url,cookies=token)
-        if req.status_code == 200:
-            response =json.loads(req.text)
-            phone = response['widgets']['contact']['phone']
-            if re.match('^(09)\d{9}$',phone):
-                f.write('{0}\n'.format(phone))
-                print(phone)
-        sleep(5)
-
-browser.close()
+try:
+    while True:
+        html_page = browser.page_source
+        soup = BeautifulSoup(html_page,'html.parser')
+        with open('contacts.txt','a') as f:
+            for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
+                _id = link.get('href').split('/')[-1]
+                if _id not in links:
+                    links.append(_id)
+                    f.write("%s\n" %(_id))
+except :
+    browser.close()
