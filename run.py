@@ -13,5 +13,13 @@ WebDriverWait(browser,60).until(EC.presence_of_element_located((By.CLASS_NAME, '
 
 btn = browser.find_element_by_class_name('login-message__login-btn')
 btn.click()
-input("sdss")
+input("Login then press enter...")
+
+cookies_list = browser.get_cookies()
+cookies_dict = {}
+for cookie in cookies_list:
+    cookies_dict[cookie['name']] = cookie['value']
+
+print(cookies_dict)
+
 browser.close()
