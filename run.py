@@ -8,6 +8,8 @@ from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 import re
 import requests
+import json
+from time import sleep
 
 
 browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
@@ -24,6 +26,9 @@ cookies_dict = {}
 for cookie in cookies_list:
     cookies_dict[cookie['name']] = cookie['value']
 
+token = {'token':cookies_dict['token']}
+print(token)
+
 input("For Get All number from this page press enter")
 html_page = browser.page_source
 soup = BeautifulSoup(html_page,'html.parser')
@@ -32,11 +37,16 @@ links = []
 
 for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
     links.append(link.get('href'))
-
-for link in links:
-    url = 'https://api.divar.ir/v5/posts/{0}/contact/'.format(link.split('/')[-1])
-    req = requests.get(url,cookies=cookies_dict)
-    if req.status_code == 200:
-        print(req.text)
+with open('phones.txt','a') as f:
+    for link in links:
+        url = 'https://api.divar.ir/v5/posts/{0}/contact'.format(link.split('/')[-1])
+        req = requests.get(url,cookies=token)
+        if req.status_code == 200:
+            response =json.loads(req.text)
+            phone = response['widgets']['contact']['phone']
+            if re.match('^(09)\d{9}$',phone):
+                f.write('{0}\n'.format(phone))
+                print(phone)
+        sleep(5)
 
 browser.close()
