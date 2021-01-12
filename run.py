@@ -5,6 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from bs4 import BeautifulSoup
+import re
+
 
 browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
 browser.get('https://divar.ir/my-divar/my-posts')
@@ -20,6 +23,15 @@ cookies_dict = {}
 for cookie in cookies_list:
     cookies_dict[cookie['name']] = cookie['value']
 
-print(cookies_dict)
+input("For Get All number from this page press enter")
+html_page = browser.page_source
+soup = BeautifulSoup(html_page,'html.parser')
+
+links = []
+
+for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
+    links.append(link.get('href'))
+
+print(links)
 
 browser.close()
