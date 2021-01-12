@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 import re
+import requests
 
 
 browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
@@ -32,6 +33,10 @@ links = []
 for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
     links.append(link.get('href'))
 
-print(links)
+for link in links:
+    url = 'https://api.divar.ir/v5/posts/{0}/contact/'.format(link.split('/')[-1])
+    req = requests.get(url,cookies=cookies_dict)
+    if req.status_code == 200:
+        print(req.text)
 
 browser.close()
