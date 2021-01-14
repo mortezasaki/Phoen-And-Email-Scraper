@@ -7,16 +7,17 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 import re
+import os
 
 
-browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
+browser = webdriver.Chrome(executable_path='../chromedriver') # Chrome driver
 browser.get('https://divar.ir/my-divar/my-posts')
 
 WebDriverWait(browser,60).until(EC.presence_of_element_located((By.CLASS_NAME, 'login-message__login-btn')))
 
 btn = browser.find_element_by_class_name('login-message__login-btn')
 btn.click()
-input("Login then press enter...")
+input("Login to Divar, then press enter...")
 
 cookies_list = browser.get_cookies()
 cookies_dict = {}
@@ -28,7 +29,10 @@ f = open('token.txt','w')
 f.write(cookies_dict['token'])
 f.close()
 
-input("For Get links from this page press enter")
+input("For Get links from this page press enter then scroll page...")
+
+if os.path.exists('contacts.txt'):
+    os.remove('contacts.txt')
 
 links = []
 
