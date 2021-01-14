@@ -23,4 +23,4 @@ with open('phones.txt','a') as f:
             if re.match('^(09)\d{9}$',phone):
                 f.write('{0}\n'.format(phone))
                 print(phone)
-        sleep(5)
+        sleep(10)
