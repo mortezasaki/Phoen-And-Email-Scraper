@@ -2,7 +2,11 @@ import requests
 import json
 from time import sleep
 import re
+import os
 
+if not os.path.exists('Divar/token.txt'):
+    print("Token not exist. first login to Divar with run.py")
+    exit()
 f = open('Divar/token.txt', 'r')
 token = f.readline()
 f.close()
