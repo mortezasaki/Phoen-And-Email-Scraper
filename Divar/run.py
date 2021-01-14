@@ -10,7 +10,7 @@ import re
 import os
 
 
-browser = webdriver.Chrome(executable_path='../chromedriver') # Chrome driver
+browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
 browser.get('https://divar.ir/my-divar/my-posts')
 
 WebDriverWait(browser,60).until(EC.presence_of_element_located((By.CLASS_NAME, 'login-message__login-btn')))
@@ -25,14 +25,14 @@ for cookie in cookies_list:
     cookies_dict[cookie['name']] = cookie['value']
 
 token = {'token':cookies_dict['token']}
-f = open('token.txt','w')
+f = open('Divar/token.txt','w')
 f.write(cookies_dict['token'])
 f.close()
 
 input("For Get links from this page press enter then scroll page...")
 
-if os.path.exists('contacts.txt'):
-    os.remove('contacts.txt')
+if os.path.exists('Divar/contacts.txt'):
+    os.remove('Divar/contacts.txt')
 
 links = []
 
@@ -40,7 +40,7 @@ try:
     while True:
         html_page = browser.page_source
         soup = BeautifulSoup(html_page,'html.parser')
-        with open('contacts.txt','a') as f:
+        with open('Divar/contacts.txt','a') as f:
             for link in soup.findAll('a', attrs={'href': re.compile("^/v/")}):
                 _id = link.get('href').split('/')[-1]
                 if _id not in links:
