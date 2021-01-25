@@ -9,8 +9,9 @@ from bs4 import BeautifulSoup
 import re
 import os
 
+chromedriver_path = '.{0}chromedriver'.format(os.sep)
 
-browser = webdriver.Chrome(executable_path='./chromedriver') # Chrome driver
+browser = webdriver.Chrome(executable_path=chromedriver_path) # Chrome driver
 browser.get('https://divar.ir/my-divar/my-posts')
 
 WebDriverWait(browser,60).until(EC.presence_of_element_located((By.CLASS_NAME, 'login-message__login-btn')))
